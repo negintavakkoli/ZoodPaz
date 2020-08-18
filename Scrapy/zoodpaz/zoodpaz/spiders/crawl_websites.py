@@ -63,7 +63,7 @@ class Recipespider(CrawlSpider):
         file_data.append(dic)
         with open("recipe.json", "w") as f:
             json.dump(file_data,f)
-
+        print(idFood)
         # print(recipeCategory,hardship,prepTime,cookTime,title_of_food,description_of_food)
         # print(recipeIngredient_name,recipeIngredient_quantity)
         # print ( response.request.url )
