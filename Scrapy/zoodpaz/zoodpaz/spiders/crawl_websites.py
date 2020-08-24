@@ -2,6 +2,7 @@ import scrapy
 from scrapy.spiders import CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor
 import json
+from bs4 import BeautifulSoup
 
 class Recipespider(CrawlSpider):
     name = 'zoodpaz'
@@ -27,10 +28,15 @@ class Recipespider(CrawlSpider):
         photoAddress = response.xpath('//img[@class="attachment-full size-full wp-post-image"]/@data-src').get()
         foodTitle = response.xpath ( '//h1[@itemprop="name"]/text()' ).get ()
         descriptionFood = response.xpath ( '//div[@itemprop="description"]/p/text()').get()
-        recipeIngredient = response.xpath ('//div[@itemprop="recipeIngredient"]/span/text()' ).get ()
-        recipeIngredientName = response.xpath ( '//div[@itemprop="recipeIngredient"]/span[@class="name"]/text()' ).get ()
-        recipeIngredientQuantity = response.xpath ('//div[@itemprop="recipeIngredient"]/span[@class="quantity"]/text()' ).get()
-        recipeInstructions = response.xpath('//span[@itemprop="recipeInstructions"]/p/text()').getall()
+        recipeIngredient = response.xpath ('//div[@itemprop="recipeIngredient"]/span/text()' ).getall ()
+        recipeIngredientName = response.xpath ( '//div[@itemprop="recipeIngredient"]/span[@class="name"]/text()' ).getall ()
+        recipeIngredientQuantity = response.xpath ('//div[@itemprop="recipeIngredient"]/span[@class="quantity"]/text()' ).getall()
+        # recipeInstructions = response.xpath('//span[@itemprop="recipeInstructions"]/p/text()').getall()
+        recipeInstructionstemp = response.xpath ( '//span[@itemprop="recipeInstructions"]/p' ).getall ()
+        recipeInstructions = []
+        for tagtemp in recipeInstructionstemp:
+            soup = BeautifulSoup(tagtemp)
+            recipeInstructions.append(soup.text)
         referenceslink = response.xpath('//div[@class="col-12 col-md-7 references"]/a/@href').get()
         referencesName = response.xpath('//div[@class="col-12 col-md-7 references"]/a/text()').get()
         keywordFood = response.xpath('//span[@class="tag"]/a/text()').getall()
@@ -50,6 +56,7 @@ class Recipespider(CrawlSpider):
             "foodTitle":foodTitle,
             "descriptionFood":descriptionFood,
             "recipeIngredient":recipeIngredient,
+            "recipeIngredientName":recipeIngredientName,
             "recipeIngredientQuantity":recipeIngredientQuantity,
             "recipeInstructions":recipeInstructions,
             "referenceslink":referenceslink,
@@ -59,10 +66,13 @@ class Recipespider(CrawlSpider):
 
         }
 
+        print(recipeIngredientName)
+
 
         file_data.append(dic)
-        with open("recipe.json", "w") as f:
-            json.dump(file_data,f)
+        if len(recipeIngredientName) > 0:
+            with open("recipe.json", "w",encoding="utf-8") as f:
+                json.dump(file_data,f, ensure_ascii = False,indent = 4 )
         print(idFood)
         # print(recipeCategory,hardship,prepTime,cookTime,title_of_food,description_of_food)
         # print(recipeIngredient_name,recipeIngredient_quantity)
