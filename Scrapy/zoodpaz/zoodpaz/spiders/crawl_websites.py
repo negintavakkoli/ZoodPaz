@@ -3,6 +3,7 @@ from scrapy.spiders import CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor
 import json
 from bs4 import BeautifulSoup
+from urllib.parse import urlparse
 
 class Recipespider(CrawlSpider):
     name = 'zoodpaz'
@@ -15,6 +16,7 @@ class Recipespider(CrawlSpider):
     )
 
     def parse_item(self , response):
+
         try:
             with open("recipe.json", "r") as f:
                 file_data = json.load(f)

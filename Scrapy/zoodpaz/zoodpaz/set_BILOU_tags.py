@@ -1,45 +1,72 @@
 import json
-
-
-def find_str(s, char):
-    index = 0
-
-    if char in s:
-        c = char[0]
-        for ch in s:
-            if ch == c:
-                if s[index:index+len(char)] == char:
-                    return index
-
-            index += 1
-
-    return -1
-#
-# print(find_str("Happy birthday", "day"))
-# print(find_str("Happy birthday", "rth"))
-# print(find_str("Happy birthday", "rh"))
+import re
+import numpy as np
 
 
 with open("recipe.json", "r") as f:
-    recipe_ins = json.load(f)
+    recipes = json.load(f)
 
-# with open("recipe.json", "r") as f:
-#     ingredient = json.load(f)
-i = 0
-for item in recipe_ins:
+
+i,j = 0,0
+food_list = []
+label_material = "GRC"
+label_title = "TIT"
+ff = open("doccano_input.json","w")
+
+#recognize instruction
+for item in recipes:
+    food_title = item["foodTitle"]
     instruction_rec = item["recipeInstructions"]
-    ingredient_item = item["recipeIngredient"]
-    if ingredient_item == None:
-        continue
-    for material in ingredient_item:
-        if material in instruction_rec:
-            print("find sth")
-            offset_start = find_str(instruction_rec,material)
-            # offset_start = find_str(instruction_rec,ingredient[i])
-        else:
-            print ( "nothing" )
-            continue
+    instruction_rec = " ".join(instruction_rec)
+    instruction_rec = food_title+"\n"+instruction_rec
+    binary_recipe = [0] * len ( instruction_rec )
+
+    food_id = item["ID"]
+    food_dic = {
+        "id" : food_id,
+        "text": instruction_rec,
+    }
+    labels = []
+    ingredient_item = item["recipeIngredientName"]
+    ingredient_item = list ( set ( ingredient_item ) )
+    ingredient_item = list ( sorted ( ingredient_item , key = len ) )
+
+    # for material in ingredient_item:
+    #     if material in instruction_rec:
+    #         try:
+    #             # index_matrial = instruction_rec.index(material)
+    #
+    #             start_point = [m.start () for m in re.finditer ( material , instruction_rec)]
+    #             len_material= len(material)
+    #             for point in start_point:
+    #                 end_point = point+len_material
+    #                 temp_binary = [0]*len(instruction_rec)
+    #                 temp_binary[point:end_point] = [1]*(end_point-point)
+    #                 if (1 in (np.array(temp_binary) & np.array(binary_recipe))):
+    #                     pass
+    #                     # print ( ingredient_item )
+    #                     # print ( material )
+    #                 else:
+    #                     labels.append ( [point , end_point , label_material] )
+    #                     binary_recipe[point:end_point] = [1] * (end_point - point)
+    #         except:
+    #             print("error")
+    #             pass
+    #
+    #         # offset_start = find_str(instruction_rec,material)
+    #         # offset_start = find_str(instruction_rec,ingredient[i])
+    #     else:
+    #         j+=1
+    #         continue
+    # food_dic["labels"] = labels
+    food_list.append(food_dic)
+    json.dump(food_dic,ff)
+    ff.write("\n")
+ff.close()
 
 
-        print(offset_start)
+with open("food_dataset.json", "w", encoding = "utf-8") as f:
+    json.dump(food_list,f, ensure_ascii = False ,indent = 2)
+
+print("There are {} valid and {} invalid cases.".format(i,j))
 
