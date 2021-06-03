@@ -1,11 +1,11 @@
 import json
 import pickle
 
-# with open("data/file_1.json1" , "r") as f:
-#     datafile = f.read().splitlines()
-# with open("data/2nafare_label.json1" , "r") as f:
-with open("data/irancook.json1" , "r") as f:
+with open("data/recipe.json" , "r") as f:
     datafile = f.read().splitlines()
+# with open("data/2nafare_label.json1" , "r") as f:
+# with open("data/irancook.json1" , "r") as f:
+#     datafile = f.read().splitlines()
 # f = open("data/file.json1" , "r")
 # data_temp = f.read().splitlines()
 # f.close()
@@ -32,7 +32,7 @@ for item in datafile:
 print(dataset[0])
 print(dataset[1])
 # dataset.pop(1)
-with open("data/spacy_input_irancook.pickle", "wb") as f:
+with open("data/spacy_input_kalle.pickle", "wb") as f:
 # with open("data/spacy_input_2nafare.pickle", "wb" ) as f:
     pickle.dump(dataset,f)
 # with open("data/raw_text.pickle", "wb" ) as f:

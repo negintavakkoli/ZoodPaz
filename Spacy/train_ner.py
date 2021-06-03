@@ -41,22 +41,24 @@ def train_spacy(data , iterations):
 
 random.shuffle(TRAIN_DATA)
 TEST_DATA = []
-for i in range(20):
-    TEST_DATA.append(TRAIN_DATA.pop(0))
-with open("data/TEST_DATA.pickle" , "wb") as f:
-    pickle.dump(TEST_DATA, f)
+# for i in range(20):
+#     TEST_DATA.append(TRAIN_DATA.pop(0))
+# with open("data/TEST_DATA.pickle" , "wb") as f:
+#     pickle.dump(TEST_DATA, f)
 print(len(TRAIN_DATA),len(TEST_DATA))
 print("**********************")
 # print(TEST_DATA[0])
 prdnlp = train_spacy ( TRAIN_DATA , 50 )
 
 # Save our trained Model
-modelfile = input ( "Enter your Model Name: " )
+# Model_number of test data_E
+# modelfile = input ( "Enter your Model Name: " )
+modelfile = "Model_full_E50_D2"
 prdnlp.to_disk ( modelfile )
 
 # Test your text
-test_text = input ( "Enter your testing text: " )
-doc = prdnlp ( test_text )
-for ent in doc.ents:
-    print ( ent.text , ent.start_char , ent.end_char , ent.label_ )
+# test_text = input ( "Enter your testing text: " )
+# doc = prdnlp ( test_text )
+# for ent in doc.ents:
+#     print ( ent.text , ent.start_char , ent.end_char , ent.label_ )
 

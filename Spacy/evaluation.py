@@ -15,7 +15,7 @@ def evaluate(ner_model, examples):
 
 # example run
 
-with open("data/spacy_input_irancook.pickle" , "rb") as f:
+with open("data/TEST_DATA.pickle" , "rb") as f:
     examples = pickle.load(f)
 # examples = [
 #     ('Who is Shaka Khan?',
@@ -24,6 +24,6 @@ with open("data/spacy_input_irancook.pickle" , "rb") as f:
 #      [(7, 13, 'LOC'), (18, 24, 'LOC')])
 # ]
 
-ner_model = spacy.load("Model_155_E50") # for spaCy's pretrained use 'en_core_web_sm'
+ner_model = spacy.load("Model_full_E50_D2") # for spaCy's pretrained use 'en_core_web_sm'
 results = evaluate(ner_model, examples)
 print(results)
