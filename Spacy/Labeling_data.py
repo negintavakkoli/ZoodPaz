@@ -1,7 +1,9 @@
 import json
+import pickle
 import spacy
 import networkx as nx
 from networkx.algorithms import bipartite
+
 
 #loading model
 ner_model = spacy.load("Model_full_E50_D2") # for spaCy's pretrained use 'en_core_web_sm'
@@ -15,7 +17,9 @@ G=nx.Graph()
 ID_ing = {}
 id_counter = 1
 # Test your text
-for item in test_data:
+for index, item in enumerate(test_data):
+    if index%50==0:
+        print(index)
     Ing_test = item["Text"]
     # Ing_test.insert(0,item["Title"])
     Ing_test = " ".join(Ing_test)
@@ -40,8 +44,9 @@ for item in test_data:
         title_list.append(item["Title"])
     # print(title_list)
     #Adding titles to graph as a node
-    G.add_node(item["ID"], bipartite = 0 )
-    nx.set_node_attributes(G,{item["ID"]:title_list[0]}, "name")
+    id_food = str(item["ID"])
+    G.add_node( id_food , bipartite = 0 )
+    nx.set_node_attributes( G , {id_food:title_list[0]} , "name" )
 
     #Adding ingredients to graph as nodes
     for ing in ing_list:
@@ -56,26 +61,17 @@ for item in test_data:
             id_counter+=1
 
         #Connecting ingredients to foods by the edges of graph
-        G.add_edge(item["ID"], id_temp)
+        G.add_edge( id_food , id_temp )
 
+#Finding the neighbours of nodes
+# H = G.neighbors("1")
+# for item1 in H:
+#     print(item1)
 
-    #Saving graph
+#Saving graph as GML for database
+nx.write_gml ( G , "database.gml" )
 
+# Saving ID_ing[ing] as pickle
+with open("ID_ing.pickle", "wb") as f:
+    pickle.dump(ID_ing[ing],f)
 
-
-    #Finding the neighbours of nodes
-
-
-
-    #Saving ID_ing[ing]
-
-
-
-    if(int(item["ID"])>10):
-        break
-
-
-#Adding ingrediant nodes and title to graph
-print(G.nodes())
-print(G.edges())
-print(G.nodes["ING_2"]["name"])
