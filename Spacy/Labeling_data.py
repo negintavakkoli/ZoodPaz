@@ -44,9 +44,11 @@ for index, item in enumerate(test_data):
         title_list.append(item["Title"])
     # print(title_list)
     #Adding titles to graph as a node
-    id_food = str(item["ID"])
+    id_food = "Food_"+str(item["ID"])
     G.add_node( id_food , bipartite = 0 )
     nx.set_node_attributes( G , {id_food:title_list[0]} , "name" )
+
+
 
     #Adding ingredients to graph as nodes
     for ing in ing_list:
@@ -63,15 +65,16 @@ for index, item in enumerate(test_data):
         #Connecting ingredients to foods by the edges of graph
         G.add_edge( id_food , id_temp )
 
-#Finding the neighbours of nodes
-# H = G.neighbors("1")
-# for item1 in H:
-#     print(item1)
+#Last id_counter: 1980 --13 june 2021
+print("ID:" ,id_counter)
+
+#Last id_food: 1744 --13 june 2021
+print(f"The last food id is {id_food}.")
 
 #Saving graph as GML for database
 nx.write_gml ( G , "database.gml" )
 
 # Saving ID_ing[ing] as pickle
 with open("ID_ing.pickle", "wb") as f:
-    pickle.dump(ID_ing[ing],f)
+    pickle.dump(ID_ing,f)
 
